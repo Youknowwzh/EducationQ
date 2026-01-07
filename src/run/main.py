@@ -109,7 +109,7 @@ def setup_logging(logging_level, output_path):
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
-
+ 
     root_logger = logging.getLogger()
     root_logger.setLevel(numeric_level)
 
