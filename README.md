@@ -341,7 +341,7 @@ EducationQ_Framework/
 │       └── main.py                 # Main entry point
 ├── README.md
 └── requirements.txt
-```
+``` 
 
 ## 🤝 Contributing
 
