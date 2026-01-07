@@ -163,6 +163,7 @@ EducationQ provides both **quantitative** and **qualitative** evaluation:
 - **Resume Capability**: Can continue from any stage using saved results
 - **Comprehensive Analysis**: Multiple evaluation perspectives (interaction, teacher questions, student responses)
 - **Local Dataset Support**: Load datasets from local JSON files without network dependency
+- **[New] OpenRouter Routing Control**: Enforce specific upstream providers (e.g., DeepInfra, Together) to ensure experiment consistency and reproducibility.
 
 ## 🚀 Installation
 
@@ -182,7 +183,8 @@ pip install -r requirements.txt
 Run the complete evaluation pipeline:
 
 ```bash
-python src/run/main.py
+cd src/run
+python main.py
 ```
 
 ### 2. Custom Configuration
@@ -190,7 +192,7 @@ python src/run/main.py
 Use a custom configuration file:
 
 ```bash
-python src/run/main.py --config ../data/input/my_config.yaml
+python main.py --config ../data/input/my_config.yaml
 ```
 
 ### 3. Resume from Previous Results
@@ -198,13 +200,13 @@ python src/run/main.py --config ../data/input/my_config.yaml
 Load existing pretest results and continue:
 
 ```bash
-python src/run/main.py --mode load_pretest --input pretest_results.json
+python main.py --mode load_pretest --input ../output/my_experiment_v1/pretest_results.json
 ```
 
 Load existing interaction results and continue:
 
 ```bash
-python src/run/main.py --mode load_interaction --input interaction_results.json
+python main.py --mode load_interaction --input ../output/my_experiment_v1/interaction_results.json
 ```
 
 ### 4. Run Specialized Evaluations
@@ -212,7 +214,7 @@ python src/run/main.py --mode load_interaction --input interaction_results.json
 Run comprehensive evaluation on existing results:
 
 ```bash
-python src/run/main.py --mode evaluation --posttest posttest.json --csv evaluation_tasks.csv --eval-type comprehensive
+python main.py --mode evaluation --posttest ../output/my_experiment_v1/posttest.json --csv evaluation_tasks.csv --eval-type comprehensive
 ```
 
 ## ⚙️ Configuration
@@ -235,11 +237,17 @@ TEACHER_CONFIGS:
   - name: "Teacher1"
     model: "meta-llama/llama-3.1-70b-instruct"
     api_key: "your_api_key"
-    base_url: "your_api_url"
+    # If using OpenRouter, the 'provider' settings below become effective to control routing
+    base_url: "[https://openrouter.ai/api/v1/chat/completions](https://openrouter.ai/api/v1/chat/completions)" 
     temperature: 0.0
     max_tokens: 1024
     use_few_shot: false
     recommended_question_token_limit: 150
+    # [Optional] OpenRouter Specific Configuration
+    # Ensure experiment reproducibility by fixing the upstream provider
+    provider:
+      order: ["DeepInfra"]      # Prioritize specific providers (e.g., DeepInfra, Together)
+      allow_fallbacks: false    # Set to false to strictly forbid switching to other providers
 ```
 
 #### Student Configuration
@@ -248,11 +256,16 @@ STUDENT_CONFIGS:
   - name: "Student1"
     model: "meta-llama/llama-3.1-70b-instruct"
     api_key: "your_api_key"
-    base_url: "your_api_url"
+    # If using OpenRouter, the 'provider' settings below become effective to control routing
+    base_url: "https://openrouter.ai/api/v1/chat/completions"
     temperature: 0.0
     answer_max_tokens: 1024
     test_max_tokens: 2048
     include_pretest_info: true
+    # [Optional] OpenRouter Specific Configuration
+    provider:
+      order: ["Together"]       # Specify preferred upstream providers
+      allow_fallbacks: false    # Enforce strict routing
 ```
 
 #### Evaluator Configuration
@@ -261,15 +274,19 @@ EVALUATOR_CONFIG:
   name: "Evaluator"
   model: "openai/gpt-4o-mini"
   api_key: "your_openai_api_key"
-  base_url: "your_api_url"
+  base_url: "[https://openrouter.ai/api/v1/chat/completions](https://openrouter.ai/api/v1/chat/completions)"
   temperature: 0.0
   max_tokens: 4096
+  # [Optional] OpenRouter Specific Configuration
+  provider:
+    order: ["OpenAI"] 
+    allow_fallbacks: true
 ```
 
 ## 🖥️ Command Line Options
 
 ```bash
-python src/run/main.py [OPTIONS]
+python main.py [OPTIONS]
 ```
 
 **Options**:
