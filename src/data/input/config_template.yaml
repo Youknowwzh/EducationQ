@@ -34,7 +34,7 @@ TEACHER_CONFIGS:
     provider:
       order: ["selected_provider"]        # Use 'order' to specify priority
       allow_fallbacks: false      # Set to false to enforce using this provider without fallback
-
+ 
 STUDENT_CONFIGS:
   - name: "Student1" ## Setup the name of the student
     model: "meta-llama/llama-3.1-70b-instruct" ## Setup the model name based on the model API provider
