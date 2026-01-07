@@ -15,7 +15,7 @@ AGIEVAL_TEST_DATA_FOLDER_PATH: "../data/dataset/AGIEval/data/v1_1/"
 AGIEVAL_VAL_DATA_FILEPATH: "../data/dataset/AGIEval/data/few_shot_prompts.csv"
 AGIEVAL_DATASET_NAMES: ["aqua-rat"] #, "sat-math"
 LOGGING_LEVEL: "INFO"
-
+  
 TEACHER_CONFIGS:
   - name: "Teacher-qwen25-72b-instruct"
     model: "Qwen/Qwen2.5-72B-Instruct"
